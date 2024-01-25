@@ -1,0 +1,328 @@
+{
+    "components": [
+        {
+            "id": "vapp-python",
+            "name": "VApp (Python)",
+            "description": "Velocitas VApp written in Python",
+            "type": "core",
+            "programs": [
+                {
+                    "id": "create-project",
+                    "description": "Creates a new uProtocol project",
+                    "executable": "python",
+                    "args": "core/vapp-python/run.py"
+                }
+            ],
+            "variables": [
+                {
+                    "id": "language",
+                    "description": "Programming language of the project.",
+                    "type": "string",
+                    "default": "python"
+                }
+            ]
+        },
+        {
+            "id": "devcontainer-setup",
+            "name": "devContainer setup for VApps",
+            "description": "Provides configuration and setup for VSCode devContainers",
+            "type": "extension",
+            "files": [
+                {
+                    "src": "extensions/devenv/devcontainer-setup/src/common",
+                    "dst": ".devcontainer"
+                },
+                {
+                    "src": "extensions/devenv/devcontainer-setup/src/${{ language }}/common",
+                    "dst": ".devcontainer"
+                },
+                {
+                    "src": "extensions/devenv/devcontainer-setup/src/${{ language }}/${{ repoType }}",
+                    "dst": ".devcontainer"
+                }
+            ],
+            "variables": [
+                {
+                    "name": "language",
+                    "type": "string",
+                    "required": true,
+                    "description": "The programming language of the project. Either 'python' or 'cpp'"
+                },
+                {
+                    "name": "repoType",
+                    "type": "string",
+                    "required": true,
+                    "description": "The type of the repository: 'app' or 'sdk'"
+                },
+                {
+                    "name": "appManifestPath",
+                    "type": "string",
+                    "required": true,
+                    "description": "Path of the AppManifest file, relative to the .velocitas.json"
+                }
+            ]
+        },
+        {
+            "id": "sdk-installer",
+            "type": "extension",
+            "onPostInit": [
+                {
+                    "ref": "install-deps"
+                },
+                {
+                    "ref": "run"
+                }
+            ],
+            "programs": [
+                {
+                    "id": "install-deps",
+                    "executable": "python",
+                    "args": [ "-m", "pip", "install", "-r", "./extensions/devenv/sdk-installer/requirements.txt" ]
+                },
+                {
+                    "id": "run",
+                    "executable": "python",
+                    "args": [ "./extensions/devenv/sdk-installer/src/run.py" ]
+                }
+            ]
+        },
+        {
+            "id": "grpc-interface-support",
+            "type": "extension",
+            "onPostInit": [
+                {
+                    "ref": "install-deps"
+                },
+                {
+                    "ref": "generate-sdk"
+                }
+            ],
+            "programs": [
+                {
+                    "id": "install-deps",
+                    "executable": "python",
+                    "args": [ "-m", "pip", "install", "-r", "./extensions/devenv/grpc-interface-support/requirements.txt" ]
+                },
+                {
+                    "id": "generate-sdk",
+                    "description": "Generates service client SDKs to be used in business logic.",
+                    "executable": "python",
+                    "args": [ "./extensions/devenv/grpc-interface-support/src/main.py" ]
+                }
+            ]
+        },
+        {
+            "id": "runtime-local",
+            "alias": "local",
+            "type": "runtime",
+            "programs": [
+                {
+                    "id": "ensure-dapr",
+                    "executable": "./extensions/devenv/runtime_local/src/ensure-dapr.sh"
+                },
+                {
+                    "id": "run-service",
+                    "executable": "python3",
+                    "args": [
+                        "./extensions/devenv/runtime_local/src/run_service.py"
+                    ]
+                },
+                {
+                    "id": "up",
+                    "executable": "python3",
+                    "args": [
+                        "./extensions/devenv/runtime_local/src/runtime-up.py"
+                    ]
+                },
+                {
+                    "id": "install-deps",
+                    "executable": "python3",
+                    "args": [
+                        "-m",
+                        "pip",
+                        "install",
+                        "-r",
+                        "./extensions/devenv/runtime_local/src/requirements.txt"
+                    ]
+                },
+                {
+                    "id": "run-vehicle-app",
+                    "executable": "python3",
+                    "args": [
+                        "./extensions/devenv/runtime_local/src/run-vehicle-app.py"
+                    ]
+                },
+                {
+                    "id": "run-dapr-sidecar",
+                    "executable": "python3",
+                    "args": [
+                        "./extensions/devenv/runtime_local/src/run-dapr-sidecar.py"
+                    ]
+                }
+            ],
+            "onPostInit": [
+                {
+                    "ref": "install-deps"
+                },
+                {
+                    "ref": "ensure-dapr"
+                }
+            ],
+            "variables": [
+                {
+                    "name": "daprRuntimeVersion",
+                    "type": "string",
+                    "description": "Version of the dapr.io runtime to use.",
+                    "default": "1.10.3"
+                },
+                {
+                    "name": "daprCliVersion",
+                    "type": "string",
+                    "description": "Version of the dapr.io CLI to use.",
+                    "default": "1.10.0"
+                },
+                {
+                    "name": "runtimeFilePath",
+                    "type": "string",
+                    "description": "Path to the file describing your custom runtime configuration.",
+                    "default": "runtime.json"
+                },
+                {
+                    "name": "mockFilePath",
+                    "type": "string",
+                    "description": "Path to the mocking configuration for the mock service",
+                    "default": "mock.py"
+                }
+            ]
+        },
+        {
+            "id": "runtime-kanto",
+            "alias": "kanto",
+            "type": "runtime",
+            "programs": [
+                {
+                    "id": "install-deps",
+                    "executable": "python3",
+                    "args": [
+                        "-m",
+                        "pip",
+                        "install",
+                        "-r",
+                        "./extensions/devenv/runtime_kanto/src/requirements.txt"
+                    ]
+                },
+                {
+                    "id": "up",
+                    "executable": "python3",
+                    "args": [
+                        "./extensions/devenv/runtime_kanto/src/runtime/runtime_up.py"
+                    ]
+                },
+                {
+                    "id": "down",
+                    "executable": "python3",
+                    "args": [
+                        "./extensions/devenv/runtime_kanto/src/runtime/runtime_down.py"
+                    ]
+                }
+            ],
+            "onPostInit": [
+                {
+                    "ref": "install-deps"
+                }
+            ],
+            "variables": [
+                {
+                    "name": "runtimeFilePath",
+                    "type": "string",
+                    "description": "Path to the file describing your custom runtime configuration.",
+                    "default": "runtime.json"
+                },
+                {
+                    "name": "mockFilePath",
+                    "type": "string",
+                    "description": "Path to the mocking configuration for the mock service",
+                    "default": "mock.py"
+                }
+            ]
+        },
+        {
+            "id": "deployment-kanto",
+            "alias": "kanto",
+            "type": "deployment",
+            "programs": [
+                {
+                    "id": "build-vehicleapp",
+                    "executable": "python3",
+                    "args": [
+                        "./extensions/devenv/runtime_kanto/src/app_deployment/build_vehicleapp.py"
+                    ]
+                },
+                {
+                    "id": "deploy-vehicleapp",
+                    "executable": "python3",
+                    "args": [
+                        "./extensions/devenv/runtime_kanto/src/app_deployment/deploy_vehicleapp.py"
+                    ]
+                }
+            ],
+            "variables": [
+                {
+                    "name": "dockerfilePath",
+                    "type": "string",
+                    "description": "Path of Dockerfile to use",
+                    "default": "./app/Dockerfile"
+                },
+                {
+                    "name": "runtimeFilePath",
+                    "type": "string",
+                    "description": "Path to the file describing your custom runtime configuration.",
+                    "default": "runtime.json"
+                },
+                {
+                    "name": "mockFilePath",
+                    "type": "string",
+                    "description": "Path to the mocking configuration for the mock service",
+                    "default": "mock.py"
+                }
+            ]
+        },
+        {
+            "id": "pantaris-integration",
+            "type": "extension",
+            "programs": [
+                {
+                    "id": "install-deps",
+                    "executable": "python3",
+                    "args": [
+                        "-m",
+                        "pip",
+                        "install",
+                        "-r",
+                        "./extensions/devenv/desired-state-generator/src/requirements.txt"
+                    ]
+                },
+                {
+                    "id": "generate-desired-state",
+                    "executable": "python3",
+                    "args": [
+                        "./extensions/devenv/desired-state-generator/src/gen_desired_state.py"
+                    ]
+                }
+            ],
+            "variables": [
+                {
+                    "name": "runtimeFilePath",
+                    "type": "string",
+                    "description": "Path to the file describing your custom runtime configuration.",
+                    "default": "runtime.json"
+                }
+            ],
+            "onPostInit": [
+                {
+                    "ref": "install-deps"
+                }
+            ]
+        }
+    ]
+}

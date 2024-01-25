@@ -1,0 +1,72 @@
+imports:
+  python-sdk|project-creation: core/vapp-python
+
+  devenv-devcontainer-setup|vehicle-signal-interface: extensions/vapp/vehicle-signal-interface
+  devenv-devcontainer-setup|grpc-interface-support: extensions/vapp/grpc-interface
+  devenv-devcontainer-setup|setup: extensions/devenv/devcontainer-setup
+  devenv-devcontainer-setup|sdk-installer: extensions/devenv/sdk-installer
+
+  devenv-runtimes|runtime-local: extensions/devenv/runtime-local
+  devenv-runtimes|runtime-kanto: extensions/devenv/runtime-kanto
+  devenv-runtimes|desired-state-generator: extensions/devenv/desired-state-generator
+
+# modules
+git module python-sdk:
+  url: https://github.com/eclipse-velocitas/vehicle-app-python-sdk.git
+  rev: 2b5eb4bf5accedc0cfb42bb0618cd9b53ca71303
+
+git module python-template:
+  url: https://github.com/eclipse-velocitas/vehicle-app-python-template.git
+  rev: 5d534e26551293d0af39cc5eacd8e305e6098f78
+
+git module cpp-sdk:
+  url: https://github.com/eclipse-velocitas/vehicle-app-cpp-sdk.git
+  rev: 3bdf47c91c69022057baa1db366cca03a9f3c4fd
+
+git module cpp-template:
+  url: https://github.com/eclipse-velocitas/vehicle-app-cpp-template.git
+  rev: 408bfe8529d7aee9e82ac101f6c9dcbed990af8b
+
+git module devenv-devcontainer-setup:
+  url: https://github.com/eclipse-velocitas/devenv-devcontainer-setup.git
+  rev: a8b96c33f4a1b53c8aeb63d93b2766dc30df7268
+
+git module devenv-github-templates:
+  url: https://github.com/eclipse-velocitas/devenv-github-templates.git
+  rev: 5fad8fcc6b24c5178aea28814fc4e39317acc44c
+
+git module devenv-github-workflows:
+  url: https://github.com/eclipse-velocitas/devenv-github-workflows.git
+  rev: d11afbe5b5f22d90e70299dea8dc59946820febf
+
+git module devenv-runtimes:
+  url: https://github.com/eclipse-velocitas/devenv-runtimes.git
+  rev: 8a3ae1a110ff46699c706ffda223c92ccbdaed48
+
+# rules
+rule project-creation:
+  export: .project-creation
+
+rule vehicle-signal-interface:
+  export: vehicle-model-lifecycle
+
+rule github-workflows:
+  export: .github/workflows
+
+rule grpc-interface-support:
+  export: grpc-interface-support
+
+rule sdk-installer:
+  export: sdk-installer
+
+rule setup:
+  export: setup
+
+rule runtime-kanto:
+  export: runtime_kanto
+
+rule runtime-local:
+  export: runtime_local
+
+rule desired-state-generator:
+  export: desired_state_generator
