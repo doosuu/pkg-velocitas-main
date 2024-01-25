@@ -1,5 +1,5 @@
 imports:
-  python-sdk|project-creation: core/vapp-python
+  python-sdk: core/vapp-python
 
   devenv-devcontainer-setup|vehicle-signal-interface: extensions/vapp/vehicle-signal-interface
   devenv-devcontainer-setup|grpc-interface-support: extensions/vapp/grpc-interface

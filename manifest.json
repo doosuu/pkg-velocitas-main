@@ -10,7 +10,7 @@
                     "id": "create-project",
                     "description": "Creates a new uProtocol project",
                     "executable": "python",
-                    "args": "core/vapp-python/run.py"
+                    "args": "core/vapp-python/.project-creation/run.py"
                 }
             ],
             "variables": [
