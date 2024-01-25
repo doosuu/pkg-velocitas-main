@@ -15,7 +15,7 @@
             ],
             "variables": [
                 {
-                    "id": "language",
+                    "name": "language",
                     "description": "Programming language of the project.",
                     "type": "string",
                     "default": "python"
