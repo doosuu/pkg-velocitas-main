@@ -1,7 +1,7 @@
 {
     "components": [
         {
-            "id": "vapp-python",
+            "id": "vapp-core-python",
             "name": "VApp (Python)",
             "description": "Velocitas VApp written in Python",
             "type": "core",
